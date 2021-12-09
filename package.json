@@ -1,0 +1,61 @@
+{
+  "name": "battle-factions-bot",
+  "version": "1.0.0",
+  "description": "Battle Factions Bot",
+  "author": "Your Dev Life Team",
+  "engines": {
+    "node": "^14.0.0",
+    "npm": ">=6.4.0"
+  },
+  "main": "src/bot.ts",
+  "scripts": {
+    "start": "ts-node src/bot.ts",
+    "watch": "tsc -w",
+    "compile": "tsc",
+    "lint": "eslint . --ext .js,.ts",
+    "test": "jest --runInBand --detectOpenHandles --colors --verbose",
+    "test:ci": "npm run lint && npm run test:coverage",
+    "test:watch": "jest --watch --verbose",
+    "test:coverage": "jest --runInBand --no-cache --coverage --silent",
+    "deploy": "npm run compile && nodemon deploy"
+  },
+  "dependencies": {
+    "@discordjs/builders": "^0.9.0",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "@imtbl/imx-sdk": "^1.3.8",
+    "axios": "^0.24.0",
+    "discord-api-types": "^0.25.2",
+    "discord.js": "^13.3.1",
+    "ethers": "^5.5.2",
+    "merge": "^2.1.1",
+    "web3": "^1.6.1"
+  },
+  "devDependencies": {
+    "@types/eslint": "^7.28.0",
+    "@types/eslint-plugin-prettier": "^3.1.0",
+    "@types/jest": "^27.0.0",
+    "@types/node": "^16.11.11",
+    "@types/node-fetch": "^3.0.3",
+    "@types/prettier": "^2.3.2",
+    "@typescript-eslint/eslint-plugin": "^4.29.1",
+    "@typescript-eslint/parser": "^4.29.1",
+    "dotenv": "^10.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.24.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-security": "^1.4.0",
+    "husky": "^4.3.8",
+    "jest": "^27.0.6",
+    "prettier": "^2.3.2",
+    "ts-jest": "^27.0.4",
+    "ts-loader": "^9.2.5",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.3.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run test:coverage && npm run lint"
+    }
+  }
+}

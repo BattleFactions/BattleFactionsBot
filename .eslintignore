@@ -1,0 +1,6 @@
+node_modules
+dist
+dev
+coverage
+jest.config.js
+src/types.d.ts
