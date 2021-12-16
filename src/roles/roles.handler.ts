@@ -1,27 +1,19 @@
 import { CacheType, Client, Interaction } from 'discord.js';
-import { ImmutableOrderStatus, ImmutableXClient } from '@imtbl/imx-sdk';
-import { BigNumber } from 'ethers';
-import { formatUnits } from 'ethers/lib/utils';
+import { ImmutableXClient } from '@imtbl/imx-sdk';
 import {
-  apiAddress,
-  collection,
   factionDolphinRoleId,
   factionGeneralsRoleId,
   factionWhaleClubRoleId,
   guildId,
   holdersRoleId,
 } from '../utils/utils';
+import { getAddress, getAssetsPerAddress, getListedItemsPerAddress } from '../utils/imxUtils';
 
 const Web3 = require('web3');
 let imx;
 
-type ListedItems = {
-  id: string;
-  price: number;
-};
-
-export const applyRoles = async (client: Client) => {
-  imx = await ImmutableXClient.build({ publicApiUrl: apiAddress });
+export const applyRoles = async (client: Client, imxClient: ImmutableXClient) => {
+  imx = imxClient;
 
   client.on('interactionCreate', async (interaction: Interaction) => {
     if (!interaction.isCommand()) return;
@@ -31,46 +23,6 @@ export const applyRoles = async (client: Client) => {
       await executeApplyRoles(client, interaction);
     }
   });
-};
-
-const getPrice = (decimal: number, quantity: BigNumber) => {
-  return Number(formatUnits(BigNumber.from(quantity), decimal));
-};
-
-const getAddress = (interaction) => {
-  const { options } = interaction;
-  return options.getString('address');
-};
-
-const getAssetsPerAddress = async (address): Promise<[]> => {
-  const { result: assets } = await imx.getAssets({
-    collection,
-    user: address,
-  });
-  return (
-    assets?.map((asset) => ({
-      id: asset.token_id,
-    })) ?? []
-  );
-};
-
-const getOrdersPerAddress = async (address): Promise<[]> => {
-  const { result: orders } = await imx.getOrders({
-    user: address,
-    status: ImmutableOrderStatus.active,
-    sell_token_address: collection,
-  });
-  return orders ?? [];
-};
-
-const getListedItemsPerAddress = async (address: string): Promise<ListedItems[]> => {
-  const orders = await getOrdersPerAddress(address);
-  return (
-    orders?.map(({ sell, buy }) => ({
-      id: sell['data']['token_id'] as string,
-      price: getPrice(buy['data']['decimals'], buy['data']['quantity']),
-    })) || []
-  );
 };
 
 const applyRole = async (client: Client, interaction: Interaction<CacheType>, roleId: string) => {
@@ -126,7 +78,7 @@ const applyFactionGeneralsRole = async (
   address: string,
 ): Promise<number> => {
   // @Faction Generals -> At least 1 NFT unlisted and all the other NFTs must be > 0.1 eth
-  const listedItems = await getListedItemsPerAddress(address);
+  const listedItems = await getListedItemsPerAddress(imx, address);
   if (assets.length >= 1) {
     const priceFloor = 0.15;
     const hasOneUnlisted = assets.length > listedItems.length;
@@ -144,7 +96,7 @@ const executeApplyRoles = async (client: Client, interaction: Interaction<CacheT
   const address = getAddress(interaction);
   if (Web3.utils.isAddress(address)) {
     try {
-      const assets = await getAssetsPerAddress(address);
+      const assets = await getAssetsPerAddress(imx, address);
       let numberOfRolesApplied = 0;
 
       // Rules
