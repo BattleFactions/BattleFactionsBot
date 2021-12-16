@@ -7,7 +7,7 @@ import {
   guildId,
   holdersRoleId,
 } from '../utils/utils';
-import { getAddress, getAssetsPerAddress, getListedItemsPerAddress } from '../utils/imxUtils';
+import { Asset, getAddress, getAssetsPerAddress, getListedItemsPerAddress } from '../utils/imxUtils';
 
 const Web3 = require('web3');
 let imx;
@@ -33,7 +33,7 @@ const applyRole = async (client: Client, interaction: Interaction<CacheType>, ro
 };
 
 const applyHoldersRole = async (
-  assets: [],
+  assets: Asset[],
   client: Client<boolean>,
   interaction: Interaction<CacheType>,
 ): Promise<number> => {
@@ -46,7 +46,7 @@ const applyHoldersRole = async (
 };
 
 const applyFactionDolphinRole = async (
-  assets: [],
+  assets: Asset[],
   client: Client<boolean>,
   interaction: Interaction<CacheType>,
 ): Promise<number> => {
@@ -59,7 +59,7 @@ const applyFactionDolphinRole = async (
 };
 
 const applyFactionWhaleClubRole = async (
-  assets: [],
+  assets: Asset[],
   client: Client<boolean>,
   interaction: Interaction<CacheType>,
 ): Promise<number> => {
@@ -72,22 +72,27 @@ const applyFactionWhaleClubRole = async (
 };
 
 const applyFactionGeneralsRole = async (
-  assets: [],
+  assets: Asset[],
   client: Client<boolean>,
   interaction: Interaction<CacheType>,
   address: string,
 ): Promise<number> => {
   // @Faction Generals -> At least 1 NFT unlisted and all the other NFTs must be > 0.1 eth
   const listedItems = await getListedItemsPerAddress(imx, address);
-  if (assets.length >= 1) {
-    const priceFloor = 0.15;
-    const hasOneUnlisted = assets.length > listedItems.length;
-    let isRestAboveLimit = listedItems.filter((listedItem) => listedItem.price > priceFloor).length > 0;
-
-    if (hasOneUnlisted && isRestAboveLimit) {
-      await applyRole(client, interaction, factionGeneralsRoleId);
-      return 1;
-    }
+  // Rule => 1-2 = 1 unlisted
+  if (assets.length <= 2 && assets.length - listedItems.length >= 1) {
+    await applyRole(client, interaction, factionGeneralsRoleId);
+    return 1;
+  }
+  // Rule => 3-5 = 2 unlisted
+  if (assets.length <= 5 && assets.length - listedItems.length >= 2) {
+    await applyRole(client, interaction, factionGeneralsRoleId);
+    return 1;
+  }
+  // Rule => 6+ = 3 unlisted
+  if (assets.length >= 6 && assets.length - listedItems.length >= 3) {
+    await applyRole(client, interaction, factionGeneralsRoleId);
+    return 1;
   }
   return 0;
 };
@@ -96,7 +101,7 @@ const executeApplyRoles = async (client: Client, interaction: Interaction<CacheT
   const address = getAddress(interaction);
   if (Web3.utils.isAddress(address)) {
     try {
-      const assets = await getAssetsPerAddress(imx, address);
+      const assets: Asset[] = await getAssetsPerAddress(imx, address);
       let numberOfRolesApplied = 0;
 
       // Rules

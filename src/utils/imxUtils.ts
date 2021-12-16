@@ -9,9 +9,9 @@ export const getAddress = (interaction) => {
   return options.getString('address');
 };
 
-export const getListOfAssetsAddresses = async (imxClient): Promise<[]> => {
+export const getListOfAssetsAddresses = async (imxClient): Promise<Asset[]> => {
   let hasMoreItems = false;
-  let listOfAssets: [] = [];
+  let listOfAssets: Asset[] = [];
   let cursor;
   do {
     const response = await imxClient.getAssets({ collection, cursor });
@@ -19,7 +19,7 @@ export const getListOfAssetsAddresses = async (imxClient): Promise<[]> => {
     cursor = response.cursor;
     const assets = result.map((asset) => ({
       address: asset.user,
-    })) as [];
+    })) as Asset[];
     listOfAssets.push(...assets);
     hasMoreItems = remaining === 1;
   } while (hasMoreItems);
@@ -63,6 +63,10 @@ type ListedItems = {
   id: string;
   price: number;
 };
+
+export type Asset = {
+  address: string;
+}
 
 // Private functions
 const getPrice = (decimal: number, quantity: BigNumber) => {
