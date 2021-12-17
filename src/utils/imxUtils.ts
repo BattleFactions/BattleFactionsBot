@@ -9,6 +9,16 @@ export const getAddress = (interaction) => {
   return options.getString('address');
 };
 
+export const getUser = (interaction) => {
+  const { user } = interaction;
+  return user;
+};
+
+export const isBot = (interaction) => {
+  const { user } = interaction;
+  return user?.bot;
+};
+
 export const getListOfAssetsAddresses = async (imxClient): Promise<Asset[]> => {
   let hasMoreItems = false;
   let listOfAssets: Asset[] = [];
@@ -66,7 +76,7 @@ type ListedItems = {
 
 export type Asset = {
   address: string;
-}
+};
 
 // Private functions
 const getPrice = (decimal: number, quantity: BigNumber) => {

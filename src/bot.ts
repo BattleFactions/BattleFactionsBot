@@ -3,6 +3,7 @@ import { registerCommands } from './commands/commands';
 import { apiAddress, token } from './utils/utils';
 import { generateListOfHolders } from './holders/holders.handler';
 import { ImmutableXClient } from '@imtbl/imx-sdk';
+import { link } from './link/link.handler';
 
 const { Client, Intents } = require('discord.js');
 
@@ -19,6 +20,7 @@ client.on('ready', async () => {
   registerCommands();
   // Add command handlers actions here
   await applyRoles(client, imxClient);
+  await link(client, imxClient);
   await generateListOfHolders(client, imxClient);
   console.log('Bot is online!');
 });
