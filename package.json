@@ -20,6 +20,8 @@
     "deploy": "npm run compile && nodemon deploy"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.44.0",
+    "@aws-sdk/util-dynamodb": "^3.44.0",
     "@discordjs/builders": "^0.9.0",
     "@discordjs/rest": "^0.1.0-canary.0",
     "@imtbl/imx-sdk": "^1.3.8",
