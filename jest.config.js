@@ -1,9 +1,10 @@
-const { pathsToModuleNameMapper } = require('ts-jest/utils');
+const { pathsToModuleNameMapper } = require('ts-jest');
 const { compilerOptions } = require('./tsconfig.json');
 const tsJestPreset = require('ts-jest/presets');
+const dynamodbPreset = require('@shelf/jest-dynamodb/jest-preset');
 const { recursive } = require('merge');
 
-module.exports = recursive(tsJestPreset.jsWithTsESM, {
+module.exports = recursive(tsJestPreset.jsWithTsESM, dynamodbPreset, {
   rootDir: './src',
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
   setupFilesAfterEnv: ['<rootDir>/setupTests.ts'],

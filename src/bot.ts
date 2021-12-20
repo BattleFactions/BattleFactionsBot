@@ -3,13 +3,14 @@ import { registerCommands } from './commands/commands';
 import { apiAddress, token } from './utils/utils';
 import { generateListOfHolders } from './holders/holders.handler';
 import { ImmutableXClient } from '@imtbl/imx-sdk';
-import { link } from './link/link.handler';
+import { linkEth } from './link/linkEth.handler';
+import { generateListOfCurrentUsers } from './user/users.handler';
 
 const { Client, Intents } = require('discord.js');
 
 // Create a new client instance
 const client = new Client({
-  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
+  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS],
 });
 
 client.on('ready', async () => {
@@ -20,7 +21,8 @@ client.on('ready', async () => {
   registerCommands();
   // Add command handlers actions here
   await applyRoles(client, imxClient);
-  await link(client, imxClient);
+  await linkEth(client, imxClient);
+  await generateListOfCurrentUsers(client);
   await generateListOfHolders(client, imxClient);
   console.log('Bot is online!');
 });
