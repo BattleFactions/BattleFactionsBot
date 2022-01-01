@@ -43,7 +43,7 @@ declare namespace BattleFactions {
   type DateInISOString = string; // Format: 2021-09-29
   type Username = string;
   type Discriminator = string;
-  type Avatar = string;
+  type Avatar = string | null;
   type Address = string;
 
   const enum CommandsEnum {
@@ -62,10 +62,11 @@ declare namespace BattleFactions {
     network?: NetworkTypes;
   };
 
-  const enum EntityTypesEnum {
+  const enum TypesEnum {
     User = 'User',
   }
-  type EntityTypes = keyof typeof EntityTypesEnum;
+  type EntityTypes = keyof typeof TypesEnum;
+  type DtoTypes = keyof typeof TypesEnum;
 
   interface BaseEntity<EntityType extends EntityTypes, PKType, SKType> {
     PK: PKType;
@@ -76,11 +77,15 @@ declare namespace BattleFactions {
     UpdatedAt?: DateAndTimeInISOString;
   }
 
-  interface User extends BaseEntity<EntityTypesEnum.User, 'USER', `USER_ID#${Id}`> {
+  interface BaseDto<DtoType extends DtoTypes> {
+    Id: Id;
+  }
+
+  interface UserEntity extends BaseEntity<TypesEnum.User, 'USER', `USER_ID#${Id}`> {
     Username: Username;
     Discriminator: Discriminator;
-    Avatar: Avatar;
     Wallets: Wallet[];
+    Avatar?: Avatar;
     Name?: Name;
     Email?: Email;
     Phone?: Phone;
@@ -88,5 +93,19 @@ declare namespace BattleFactions {
     DateOfBirth?: DateInISOString;
   }
 
-  type Entity = User;
+  type Entity = UserEntity;
+
+  interface UserDto extends BaseDto<TypesEnum.User> {
+    Username: Username;
+    Discriminator: Discriminator;
+    Avatar?: Avatar;
+    Wallets?: Wallet[];
+    Name?: Name;
+    Email?: Email;
+    Phone?: Phone;
+    Country?: Country;
+    DateOfBirth?: DateInISOString;
+  }
+
+  type Dto = UserDto;
 }

@@ -1,4 +1,4 @@
-import { CacheType, Client, Interaction } from 'discord.js';
+import { Client, Interaction } from 'discord.js';
 import { ImmutableXClient } from '@imtbl/imx-sdk';
 import { getAddress, getUser, isBot } from '../utils/imxUtils';
 import { linkEth as linkEthService } from './linkEth.service';
@@ -6,22 +6,19 @@ import { isAppError } from '../errors/errors';
 import { ephemeralMessage } from '../utils/utils';
 
 const Web3 = require('web3');
-let imx;
 
 export const linkEth = async (client: Client, imxClient: ImmutableXClient) => {
-  imx = imxClient;
-
   client.on('interactionCreate', async (interaction: Interaction) => {
     if (!interaction.isCommand()) return;
 
     const { commandName } = interaction;
     if (commandName === BattleFactions.CommandsEnum.BF_LINK_ETH) {
-      await executeLinkEth(client, interaction);
+      await executeLinkEth(client, interaction, imxClient);
     }
   });
 };
 
-const executeLinkEth = async (client: Client, interaction: Interaction<CacheType>) => {
+const executeLinkEth = async (client: Client, interaction: Interaction, imxClient: ImmutableXClient) => {
   const user = getUser(interaction);
   const address = getAddress(interaction);
 
@@ -31,11 +28,15 @@ const executeLinkEth = async (client: Client, interaction: Interaction<CacheType
 
   if (Web3.utils.isAddress(address)) {
     try {
-      await linkEthService(user);
+      const success = await linkEthService(client, interaction, imxClient, user, address);
 
-      interaction['reply'](
-        ephemeralMessage(`User ${user.Username} and address ${address} were linked successfully!!!`),
-      );
+      if (success) {
+        interaction['reply'](
+          ephemeralMessage(`User ${user.username} and address ${address} were linked successfully!`),
+        );
+      } else {
+        interaction['reply'](ephemeralMessage(`User ${user.username} and address ${address} are already linked.`));
+      }
     } catch (e) {
       console.log('Error:', e);
       if (isAppError(e)) {

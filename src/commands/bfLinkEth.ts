@@ -5,6 +5,6 @@ export const bfLinkEthCommand = () => {
     .setName('bf-link-eth')
     .setDescription('Link ETH wallets to a discord users profile.')
     .addStringOption((option) =>
-      option.setName('eth-address').setDescription('The ETH address to link to the users profile').setRequired(true),
+      option.setName('address').setDescription('The ETH address to link to the users profile').setRequired(true),
     );
 };

@@ -9,7 +9,6 @@ export const getListOfCurrentUsers = async (client: Client): Promise<User[]> => 
     return member.user;
   });
   console.log('users length:', users.length);
-  console.log('last member:', members.last());
 
   const result = users.filter((user) => !user.bot);
   return result;

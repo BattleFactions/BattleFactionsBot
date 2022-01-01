@@ -2,6 +2,7 @@ import { collection } from './utils';
 import { ImmutableOrderStatus } from '@imtbl/imx-sdk';
 import { BigNumber } from 'ethers';
 import { formatUnits } from 'ethers/lib/utils';
+import {User} from "discord.js";
 
 // Public functions
 export const getAddress = (interaction) => {
@@ -9,9 +10,8 @@ export const getAddress = (interaction) => {
   return options.getString('address');
 };
 
-export const getUser = (interaction) => {
-  const { user } = interaction;
-  return user;
+export const getUser = (interaction): User => {
+  return interaction.user;
 };
 
 export const isBot = (interaction) => {
@@ -69,7 +69,7 @@ export const getListedItemsPerAddress = async (imxClient, address: string): Prom
 };
 
 // Types
-type ListedItems = {
+export type ListedItems = {
   id: string;
   price: number;
 };

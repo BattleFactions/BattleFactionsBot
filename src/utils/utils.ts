@@ -27,3 +27,7 @@ export const message = (message: string, files?: MessageAttachment[]) => ({
   ephemeral: false,
   files,
 });
+
+export const hasWallet = (wallets: BattleFactions.Wallet[], address: BattleFactions.Address) => {
+  return wallets.findIndex((wallet) => wallet.address === address) != -1;
+};

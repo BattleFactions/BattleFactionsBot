@@ -21,10 +21,10 @@ const execute = async (client: Client, message: Message) => {
   try {
     const listOfUsers = await getListOfCurrentUsers(client);
 
-    let csvData = 'Id,Username,Discriminator,Username#Discriminator\n';
+    let csvData = '#,Id,Username,Discriminator,Username#Discriminator\n';
 
-    listOfUsers.forEach((user) => {
-      csvData += `${user.id},${user.username},${user.discriminator},${user.username}#${user.discriminator}\n`;
+    listOfUsers.forEach((user, index) => {
+      csvData += `${index+1},${user.id},${user.username},${user.discriminator},${user.username}#${user.discriminator}\n`;
     });
 
     const attachment = new MessageAttachment(Buffer.from(csvData), 'ListOfUsers.csv');

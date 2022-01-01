@@ -1,119 +1,30 @@
-import { CacheType, Client, Interaction } from 'discord.js';
+import { Client, Interaction } from 'discord.js';
 import { ImmutableXClient } from '@imtbl/imx-sdk';
-import {
-  factionDolphinRoleId,
-  factionGeneralsRoleId,
-  factionWhaleClubRoleId,
-  guildId,
-  holdersRoleId,
-} from '../utils/utils';
-import { Asset, getAddress, getAssetsPerAddress, getListedItemsPerAddress } from '../utils/imxUtils';
+import { getAddress } from '../utils/imxUtils';
+import { applyRoles as applyRolesService } from './roles.service';
 
 const Web3 = require('web3');
-let imx;
 
 export const applyRoles = async (client: Client, imxClient: ImmutableXClient) => {
-  imx = imxClient;
-
   client.on('interactionCreate', async (interaction: Interaction) => {
     if (!interaction.isCommand()) return;
 
     const { commandName } = interaction;
     if (commandName === 'bf-verify') {
-      await executeApplyRoles(client, interaction);
+      await execute(client, interaction, imxClient);
     }
   });
 };
 
-const applyRole = async (client: Client, interaction: Interaction<CacheType>, roleId: string) => {
-  const guild = client.guilds.cache.get(guildId);
-  const member = await guild?.members.fetch(interaction.user.id);
-  const role = await guild?.roles.fetch(roleId);
-  if (role) member?.roles.add(role);
-};
-
-const applyHoldersRole = async (
-  assets: Asset[],
-  client: Client<boolean>,
-  interaction: Interaction<CacheType>,
-): Promise<number> => {
-  // @HOLDERS -> 1+ NFT
-  if (assets.length > 1) {
-    await applyRole(client, interaction, holdersRoleId);
-    return 1;
-  }
-  return 0;
-};
-
-const applyFactionDolphinRole = async (
-  assets: Asset[],
-  client: Client<boolean>,
-  interaction: Interaction<CacheType>,
-): Promise<number> => {
-  // @Faction Dolphin -> 5+ NFTs
-  if (assets.length > 5) {
-    await applyRole(client, interaction, factionDolphinRoleId);
-    return 1;
-  }
-  return 0;
-};
-
-const applyFactionWhaleClubRole = async (
-  assets: Asset[],
-  client: Client<boolean>,
-  interaction: Interaction<CacheType>,
-): Promise<number> => {
-  // @Faction Whale Club -> 10+ NFTs
-  if (assets.length > 10) {
-    await applyRole(client, interaction, factionWhaleClubRoleId);
-    return 1;
-  }
-  return 0;
-};
-
-const applyFactionGeneralsRole = async (
-  assets: Asset[],
-  client: Client<boolean>,
-  interaction: Interaction<CacheType>,
-  address: string,
-): Promise<number> => {
-  // @Faction Generals -> At least 1 NFT unlisted and all the other NFTs must be > 0.1 eth
-  const listedItems = await getListedItemsPerAddress(imx, address);
-  // Rule => 1-2 = 1 unlisted
-  if (assets.length <= 2 && assets.length - listedItems.length >= 1) {
-    await applyRole(client, interaction, factionGeneralsRoleId);
-    return 1;
-  }
-  // Rule => 3-5 = 2 unlisted
-  if (assets.length <= 5 && assets.length - listedItems.length >= 2) {
-    await applyRole(client, interaction, factionGeneralsRoleId);
-    return 1;
-  }
-  // Rule => 6+ = 3 unlisted
-  if (assets.length >= 6 && assets.length - listedItems.length >= 3) {
-    await applyRole(client, interaction, factionGeneralsRoleId);
-    return 1;
-  }
-  return 0;
-};
-
-const executeApplyRoles = async (client: Client, interaction: Interaction<CacheType>) => {
+const execute = async (client: Client, interaction: Interaction, imx: ImmutableXClient) => {
   const address = getAddress(interaction);
   if (Web3.utils.isAddress(address)) {
     try {
-      const assets: Asset[] = await getAssetsPerAddress(imx, address);
-      let numberOfRolesApplied = 0;
-
-      // Rules
-      numberOfRolesApplied += await applyHoldersRole(assets, client, interaction);
-      numberOfRolesApplied += await applyFactionDolphinRole(assets, client, interaction);
-      numberOfRolesApplied += await applyFactionWhaleClubRole(assets, client, interaction);
-      numberOfRolesApplied += await applyFactionGeneralsRole(assets, client, interaction, address);
-
-      let message = 'Your verification was successful, but no roles were applied!';
-      if (numberOfRolesApplied === 1) message = 'Your verification was successful and you got 1 new role!';
+      const numberOfRolesApplied = await applyRolesService(client, interaction, imx, address);
+      let message = 'The verification was successful, but no roles were applied!';
+      if (numberOfRolesApplied === 1) message = 'The verification was successful and 1 new role was applied!';
       if (numberOfRolesApplied > 1)
-        message = `Your verification was successful and you got ${numberOfRolesApplied} new roles!`;
+        message = `The verification was successful and ${numberOfRolesApplied} new roles were applied!`;
 
       interaction['reply']({
         content: message,
