@@ -19,19 +19,20 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - name: Check out repository
+      - name: Checking out repository
         uses: actions/checkout@v2
-      - name: Check out repository done!
+      - run: echo "Check out repository done!"
 
       - name: Installing Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+      - run: echo "Installing Node.js ${{ matrix.node-version }} done!"
 
       - name: Installing dependencies
         run: npm install
-      - name: Installing dependencies done!
+      - run: echo "Installing dependencies done!"
 
       - name: Creating and populating .env file
         env:
@@ -66,18 +67,18 @@ jobs:
 
           echo "ls -a ${{ github.workspace }}"
           ls -a ${{ github.workspace }}
-      - name: Creating and populating .env file done!
+      - run: echo "Creating and populating .env file done!"
 
       - name: Compiling the code
         run: npm run compile --if-present
-      - name: Compiling the code done!
+      - run: echo "Compiling the code done!"
 
       - name: Testing the code
         run: npm run test --if-present
-      - name: Testing the code done!
+      - run: echo "Testing the code done!"
 
       - name: Deploying the code
         run: npm run deploy --if-present
-      - name: Deploying the code done!
+      - run: echo "Deploying the code done!"
 
       - name: This job's status is ${{ job.status }}.
