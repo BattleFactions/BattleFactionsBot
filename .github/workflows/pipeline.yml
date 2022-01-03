@@ -1,0 +1,88 @@
+# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: BattleFactions Bot Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [17.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - run: echo "Cloning the repository ${{ github.ref }}..."
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - run: echo "The ${{ github.repository }} repository has been cloned to the runner!"
+
+      - run: echo "Installing node..."
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - run: echo "Installing dependencies..."
+      - name: Install the dependencies
+        run: npm install
+      - run: echo "Dependencies installation completed!"
+
+      - name: Create and populate .env file
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          BOT_CLIENT_ID: ${{ secrets.BOT_CLIENT_ID }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          BF_TABLE: ${{ secrets.BF_TABLE }}
+          BF_GUILD_ID: ${{ secrets.BF_GUILD_ID }}
+          BF_HEADQUARTERS_ROLE_ID: ${{ secrets.BF_HEADQUARTERS_ROLE_ID }}
+          BF_MOD_ROLE_ID: ${{ secrets.BF_MOD_ROLE_ID }}
+          BF_HOLDERS_ROLE_ID: ${{ secrets.BF_HOLDERS_ROLE_ID }}
+          BF_FACTION_DOLPHIN_ROLE_ID: ${{ secrets.BF_FACTION_DOLPHIN_ROLE_ID }}
+          BF_FACTION_WHALE_CLUB_ROLE_ID: ${{ secrets.BF_FACTION_WHALE_CLUB_ROLE_ID }}
+          BF_FACTION_GENERALS_ROLE_ID: ${{ secrets.BF_FACTION_GENERALS_ROLE_ID }}
+        run: |
+          touch .env
+          echo TOKEN="$TOKEN" >> .env
+          echo CLIENT_ID="$CLIENT_ID" >> .env
+          echo AWS_DEFAULT_REGION="$AWS_DEFAULT_REGION" >> .env
+          echo AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" >> .env
+          echo AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" >> .env
+          echo BF_TABLE="$BF_TABLE" >> .env
+          echo BF_GUILD_ID="$BF_GUILD_ID" >> .env
+          echo BF_HEADQUARTERS_ROLE_ID="$BF_HEADQUARTERS_ROLE_ID" >> .env
+          echo BF_MOD_ROLE_ID="$BF_MOD_ROLE_ID" >> .env
+          echo BF_HOLDERS_ROLE_ID="$BF_HOLDERS_ROLE_ID" >> .env
+          echo BF_FACTION_DOLPHIN_ROLE_ID="$BF_FACTION_DOLPHIN_ROLE_ID" >> .env
+          echo BF_FACTION_WHALE_CLUB_ROLE_ID="$BF_FACTION_WHALE_CLUB_ROLE_ID" >> .env
+          echo BF_FACTION_GENERALS_ROLE_ID="$BF_FACTION_GENERALS_ROLE_ID" >> .env
+
+          echo "ls -a ${{ github.workspace }}"
+          ls -a ${{ github.workspace }}
+
+      - run: echo "Compiling the code..."
+      - name: Compile the TS files to the dist folder
+        run: npm run compile --if-present
+      - run: echo "Compilation completed!"
+
+      - run: echo "Testing the code..."
+      - name: Test the code
+        run: npm run test --if-present
+      - run: echo "Tests completed!"
+
+      - run: echo "Deploying the code..."
+      - name: Deploy the bot
+        run: npm run deploy --if-present
+      - run: echo "Deploy completed!"
+
+      - run: echo "This job's status is ${{ job.status }}."
