@@ -82,3 +82,4 @@ jobs:
       - run: echo "Deploying the code done!"
 
       - name: This job's status is ${{ job.status }}.
+      - run: echo "The job is done!"
