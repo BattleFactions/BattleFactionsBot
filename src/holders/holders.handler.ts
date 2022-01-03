@@ -31,7 +31,7 @@ const execute = async (client: Client, message: Message) => {
     const listOfAssetsAddresses = await getListOfAssetsAddresses(imx);
 
     const listOfAddresses = listOfAssetsAddresses.reduce((address, asset: Asset) => {
-      if (!address.hasOwnProperty(asset.address)) {
+      if (!Object.prototype.hasOwnProperty.call(address, asset.address)) {
         address[asset.address] = 0;
       }
       address[asset.address]++;
@@ -39,7 +39,7 @@ const execute = async (client: Client, message: Message) => {
     }, {});
 
     const listOfHolders = Object.keys(listOfAddresses).map((address) => {
-      return { address: address, count: listOfAddresses[address] };
+      return { address: address, count: listOfAddresses[`${address}`] };
     });
 
     const attachment = new MessageAttachment(Buffer.from(JSON.stringify(listOfHolders)), 'listOfHolders.json');

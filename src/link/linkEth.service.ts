@@ -1,6 +1,6 @@
-import { isAppError, linkEthError } from '../errors/errors';
 import { Client, Interaction, User } from 'discord.js';
 import { ImmutableXClient } from '@imtbl/imx-sdk';
+import { isAppError, linkEthError } from '../errors/errors';
 import { createUser, getUser, updateUser } from '../user/user.service';
 import { hasWallet } from '../utils/utils';
 import { userMapper } from '../user/user.mapper';
@@ -35,8 +35,8 @@ const linkEth = async (
   address: BattleFactions.Address,
 ): Promise<boolean> => {
   try {
+    const userEntity = await getUser(user.id);
     let linked: boolean;
-    let userEntity = await getUser(user.id);
     const addresses = [address];
     if (userEntity) {
       const userAddresses = userEntity.Wallets.map((wallet) => {

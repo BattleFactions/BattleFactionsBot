@@ -7,7 +7,7 @@ import {
   guildId,
   holdersRoleId,
 } from '../utils/utils';
-import {Asset, getAssetsPerAddress, getListedItemsPerAddress, ListedItems} from '../utils/imxUtils';
+import { Asset, getAssetsPerAddress, getListedItemsPerAddress, ListedItems } from '../utils/imxUtils';
 
 export const applyRole = async (client: Client, interaction: Interaction, roleId: string) => {
   const guild = client.guilds.cache.get(guildId);
@@ -84,9 +84,9 @@ export const applyRoles = async (
   addresses: string[],
 ): Promise<number> => {
   // Rules
+  const assets: Asset[] = [];
+  const listedItems: ListedItems[] = [];
   let numberOfRolesApplied = 0;
-  let assets: Asset[] = [];
-  let listedItems: ListedItems[] = [];
 
   for (const address of addresses) {
     const foundAssets = await getAssetsPerAddress(imx, address);

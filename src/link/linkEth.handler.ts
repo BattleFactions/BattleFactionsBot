@@ -4,7 +4,6 @@ import { getAddress, getUser, isBot } from '../utils/imxUtils';
 import { linkEth as linkEthService } from './linkEth.service';
 import { isAppError } from '../errors/errors';
 import { ephemeralMessage } from '../utils/utils';
-
 const Web3 = require('web3');
 
 export const linkEth = async (client: Client, imxClient: ImmutableXClient) => {

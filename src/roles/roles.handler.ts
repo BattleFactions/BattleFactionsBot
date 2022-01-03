@@ -2,7 +2,6 @@ import { Client, Interaction } from 'discord.js';
 import { ImmutableXClient } from '@imtbl/imx-sdk';
 import { getAddress } from '../utils/imxUtils';
 import { applyRoles as applyRolesService } from './roles.service';
-
 const Web3 = require('web3');
 
 export const applyRoles = async (client: Client, imxClient: ImmutableXClient) => {

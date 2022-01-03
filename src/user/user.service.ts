@@ -89,8 +89,4 @@ const updateUser = async (user: BattleFactions.UserEntity) => {
   }
 };
 
-export {
-  createUser,
-  getUser,
-  updateUser,
-};
+export { createUser, getUser, updateUser };

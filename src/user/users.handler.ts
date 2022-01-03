@@ -24,7 +24,9 @@ const execute = async (client: Client, message: Message) => {
     let csvData = '#,Id,Username,Discriminator,Username#Discriminator\n';
 
     listOfUsers.forEach((user, index) => {
-      csvData += `${index+1},${user.id},${user.username},${user.discriminator},${user.username}#${user.discriminator}\n`;
+      csvData += `${index + 1},${user.id},${user.username},${user.discriminator},${user.username}#${
+        user.discriminator
+      }\n`;
     });
 
     const attachment = new MessageAttachment(Buffer.from(csvData), 'ListOfUsers.csv');

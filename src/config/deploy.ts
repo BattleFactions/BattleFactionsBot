@@ -1,5 +1,5 @@
-const FtpDeploy = require('ftp-deploy');
 const path = require('path');
+const FtpDeploy = require('ftp-deploy');
 
 require('dotenv').config();
 

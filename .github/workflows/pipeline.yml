@@ -36,7 +36,6 @@ jobs:
 
       - name: Creating and populating .env file
         env:
-          CI: true
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           BOT_CLIENT_ID: ${{ secrets.BOT_CLIENT_ID }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
@@ -75,7 +74,9 @@ jobs:
       - run: echo "Compiling the code done!"
 
       - name: Testing the code
-        run: npm run test --if-present
+        env:
+          CI: true
+        run: npm run test:ci --if-present
       - run: echo "Testing the code done!"
 
       - name: Deploying the code

@@ -1,11 +1,10 @@
+import { ImmutableXClient } from '@imtbl/imx-sdk';
 import { applyRoles } from './roles/roles.handler';
 import { registerCommands } from './commands/commands';
 import { apiAddress, token } from './utils/utils';
 import { generateListOfHolders } from './holders/holders.handler';
-import { ImmutableXClient } from '@imtbl/imx-sdk';
 import { linkEth } from './link/linkEth.handler';
 import { generateListOfCurrentUsers } from './user/users.handler';
-
 const { Client, Intents } = require('discord.js');
 
 // Create a new client instance

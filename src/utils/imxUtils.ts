@@ -1,8 +1,8 @@
-import { collection } from './utils';
 import { ImmutableOrderStatus } from '@imtbl/imx-sdk';
 import { BigNumber } from 'ethers';
 import { formatUnits } from 'ethers/lib/utils';
-import {User} from "discord.js";
+import { User } from 'discord.js';
+import { collection } from './utils';
 
 // Public functions
 export const getAddress = (interaction) => {
@@ -20,8 +20,8 @@ export const isBot = (interaction) => {
 };
 
 export const getListOfAssetsAddresses = async (imxClient): Promise<Asset[]> => {
+  const listOfAssets: Asset[] = [];
   let hasMoreItems = false;
-  let listOfAssets: Asset[] = [];
   let cursor;
   do {
     const response = await imxClient.getAssets({ collection, cursor });
