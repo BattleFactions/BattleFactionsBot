@@ -29,7 +29,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - name: Installing dependencies...
+      - name: Installing dependencies
         run: npm install
       - name: Installing dependencies done!
 
@@ -68,15 +68,15 @@ jobs:
           ls -a ${{ github.workspace }}
       - name: Creating and populating .env file done!
 
-      - name: Compiling the code...
+      - name: Compiling the code
         run: npm run compile --if-present
       - name: Compiling the code done!
 
-      - name: Testing the code...
+      - name: Testing the code
         run: npm run test --if-present
       - name: Testing the code done!
 
-      - name: Deploying the code...
+      - name: Deploying the code
         run: npm run deploy --if-present
       - name: Deploying the code done!
 
