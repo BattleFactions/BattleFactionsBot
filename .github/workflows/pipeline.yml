@@ -36,6 +36,7 @@ jobs:
 
       - name: Creating and populating .env file
         env:
+          CI: true
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           BOT_CLIENT_ID: ${{ secrets.BOT_CLIENT_ID }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
