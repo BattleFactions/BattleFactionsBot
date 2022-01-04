@@ -91,6 +91,11 @@ jobs:
 #      - run: echo "Testing the code done!"
 
       - name: Deploying the code
+        env:
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_PORT: ${{ secrets.FTP_PORT }}
         run: npm run deploy --if-present
       - run: echo "Deploying the code done!"
 
