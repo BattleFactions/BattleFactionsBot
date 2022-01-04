@@ -18,7 +18,7 @@ const config = {
   forcePasv: true,
   sftp: false,
 };
-console.log('>>>>>>', process.env.FTP_USERNAME);
+
 ftpDeploy
   .deploy(config)
   .then((res) => console.log('Success:', res))
