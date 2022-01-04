@@ -40,10 +40,10 @@ jobs:
           TEST_AWS_SECRET_ACCESS_KEY: ${{ secrets.TEST_AWS_SECRET_ACCESS_KEY }}
           TEST_BF_TABLE: ${{ secrets.TEST_BF_TABLE }}
         run: |
-          touch test/.env.test
-          echo AWS_ACCESS_KEY_ID="$TEST_AWS_ACCESS_KEY_ID" >> test/.env.test
-          echo AWS_SECRET_ACCESS_KEY="$TEST_AWS_SECRET_ACCESS_KEY" >> test/.env.test
-          echo BF_TABLE="$TEST_BF_TABLE" >> test/.env.test
+          touch src/test/.env.test
+          echo AWS_ACCESS_KEY_ID="$TEST_AWS_ACCESS_KEY_ID" >> src/test/.env.test
+          echo AWS_SECRET_ACCESS_KEY="$TEST_AWS_SECRET_ACCESS_KEY" >> src/test/.env.test
+          echo BF_TABLE="$TEST_BF_TABLE" >> src/test/.env.test
           echo "ls -a ${{ github.workspace }}"
           ls -a ${{ github.workspace }}
       - run: echo "Creating and populating .env.test file done!"
