@@ -15,7 +15,7 @@
     "clean": "rimraf dist",
     "copy:env": "cp .env dist/src/.env",
     "lint": "eslint . --ext .js,.ts",
-    "test": "jest --runInBand --detectOpenHandles --detectLeaks --debug --colors --verbose --no-watchman --forceExit",
+    "test": "jest --runInBand --detectOpenHandles --colors --verbose",
     "test:ci": "npm run lint && npm run test",
     "test:watch": "jest --watch --verbose",
     "test:coverage": "jest --runInBand --no-cache --coverage --silent",
