@@ -50,34 +50,34 @@ jobs:
 
       - name: Creating and populating .env file
         env:
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          BOT_CLIENT_ID: ${{ secrets.BOT_CLIENT_ID }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          BF_TABLE: ${{ secrets.BF_TABLE }}
+          BF_FACTION_DOLPHIN_ROLE_ID: ${{ secrets.BF_FACTION_DOLPHIN_ROLE_ID }}
+          BF_FACTION_GENERALS_ROLE_ID: ${{ secrets.BF_FACTION_GENERALS_ROLE_ID }}
+          BF_FACTION_WHALE_CLUB_ROLE_ID: ${{ secrets.BF_FACTION_WHALE_CLUB_ROLE_ID }}
           BF_GUILD_ID: ${{ secrets.BF_GUILD_ID }}
           BF_HEADQUARTERS_ROLE_ID: ${{ secrets.BF_HEADQUARTERS_ROLE_ID }}
-          BF_MOD_ROLE_ID: ${{ secrets.BF_MOD_ROLE_ID }}
           BF_HOLDERS_ROLE_ID: ${{ secrets.BF_HOLDERS_ROLE_ID }}
-          BF_FACTION_DOLPHIN_ROLE_ID: ${{ secrets.BF_FACTION_DOLPHIN_ROLE_ID }}
-          BF_FACTION_WHALE_CLUB_ROLE_ID: ${{ secrets.BF_FACTION_WHALE_CLUB_ROLE_ID }}
-          BF_FACTION_GENERALS_ROLE_ID: ${{ secrets.BF_FACTION_GENERALS_ROLE_ID }}
+          BF_MOD_ROLE_ID: ${{ secrets.BF_MOD_ROLE_ID }}
+          BF_TABLE: ${{ secrets.BF_TABLE }}
+          BOT_CLIENT_ID: ${{ secrets.BOT_CLIENT_ID }}
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
         run: |
           touch .env
-          echo TOKEN="$TOKEN" >> .env
-          echo CLIENT_ID="$CLIENT_ID" >> .env
-          echo AWS_DEFAULT_REGION="$AWS_DEFAULT_REGION" >> .env
           echo AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" >> .env
+          echo AWS_DEFAULT_REGION="$AWS_DEFAULT_REGION" >> .env
           echo AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY" >> .env
+          echo FACTION_DOLPHIN_ROLE_ID="$BF_FACTION_DOLPHIN_ROLE_ID" >> .env
+          echo FACTION_GENERALS_ROLE_ID="$BF_FACTION_GENERALS_ROLE_ID" >> .env
+          echo FACTION_WHALE_CLUB_ROLE_ID="$BF_FACTION_WHALE_CLUB_ROLE_ID" >> .env
+          echo GUILD_ID="$BF_GUILD_ID" >> .env
+          echo HEADQUARTERS_ROLE_ID="$BF_HEADQUARTERS_ROLE_ID" >> .env
+          echo HOLDERS_ROLE_ID="$BF_HOLDERS_ROLE_ID" >> .env
+          echo MOD_ROLE_ID="$BF_MOD_ROLE_ID" >> .env
           echo BF_TABLE="$BF_TABLE" >> .env
-          echo BF_GUILD_ID="$BF_GUILD_ID" >> .env
-          echo BF_HEADQUARTERS_ROLE_ID="$BF_HEADQUARTERS_ROLE_ID" >> .env
-          echo BF_MOD_ROLE_ID="$BF_MOD_ROLE_ID" >> .env
-          echo BF_HOLDERS_ROLE_ID="$BF_HOLDERS_ROLE_ID" >> .env
-          echo BF_FACTION_DOLPHIN_ROLE_ID="$BF_FACTION_DOLPHIN_ROLE_ID" >> .env
-          echo BF_FACTION_WHALE_CLUB_ROLE_ID="$BF_FACTION_WHALE_CLUB_ROLE_ID" >> .env
-          echo BF_FACTION_GENERALS_ROLE_ID="$BF_FACTION_GENERALS_ROLE_ID" >> .env
+          echo CLIENT_ID="$BOT_CLIENT_ID" >> .env
+          echo TOKEN="$BOT_TOKEN" >> .env
       - run: echo "Creating and populating .env file done!"
 
       - name: Compiling the code
