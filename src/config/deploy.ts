@@ -10,7 +10,7 @@ const config = {
   password: process.env.FTP_PASSWORD,
   host: process.env.FTP_HOST,
   port: process.env.FTP_PORT,
-  localRoot: path.join(__dirname, '../../src'),
+  localRoot: path.join(__dirname, '../../dist'),
   remoteRoot: '/',
   include: ['*', '**/*', '.env'],
   exclude: ['**/*.map', 'node_modules/**', 'node_modules/**/.*', '.git/**'],
