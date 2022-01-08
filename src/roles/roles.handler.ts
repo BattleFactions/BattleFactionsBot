@@ -19,7 +19,7 @@ const execute = async (client: Client, interaction: Interaction, imx: ImmutableX
   const address = getAddress(interaction);
   if (Web3.utils.isAddress(address)) {
     try {
-      const numberOfRolesApplied = await applyRolesService(client, interaction, imx, address);
+      const numberOfRolesApplied = await applyRolesService(client, interaction, imx, [address]);
       let message = 'The verification was successful, but no roles were applied!';
       if (numberOfRolesApplied === 1) message = 'The verification was successful and 1 new role was applied!';
       if (numberOfRolesApplied > 1)
