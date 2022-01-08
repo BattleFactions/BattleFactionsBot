@@ -80,9 +80,9 @@ jobs:
           echo TOKEN="$BOT_TOKEN" >> .env
       - run: echo "Creating and populating .env file done!"
 
-      - name: Compiling the code
-        run: npm run compile --if-present
-      - run: echo "Compiling the code done!"
+#      - name: Compiling the code
+#        run: npm run compile --if-present
+#      - run: echo "Compiling the code done!"
 
 #      - name: Testing the code
 #        env:
