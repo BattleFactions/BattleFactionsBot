@@ -45,7 +45,7 @@ export const getAssetsPerAddress = async (imxClient, address: string): Promise<[
   return (
     assets?.map((asset) => ({
       id: asset.token_id,
-    })) ?? []
+    })) || []
   );
 };
 
@@ -55,7 +55,7 @@ export const getOrdersPerAddress = async (imxClient, address: string): Promise<[
     status: ImmutableOrderStatus.active,
     sell_token_address: collection,
   });
-  return orders ?? [];
+  return orders || [];
 };
 
 export const getListedItemsPerAddress = async (imxClient, address: string): Promise<ListedItems[]> => {

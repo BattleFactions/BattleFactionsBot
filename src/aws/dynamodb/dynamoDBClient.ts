@@ -16,7 +16,7 @@ const client = new DynamoDBClient({
 export const sendQuery = async <EntityType extends unknown>(command: QueryCommand): Promise<EntityType[]> => {
   const commandOutput = await client.send(command);
 
-  return (commandOutput?.Items ?? []).map((item) => unmarshall(item)) as EntityType[];
+  return (commandOutput?.Items || []).map((item) => unmarshall(item)) as EntityType[];
 };
 
 export const sendGetItem = async <EntityType extends unknown>(command: GetItemCommand): Promise<EntityType> => {
