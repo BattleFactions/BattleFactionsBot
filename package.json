@@ -15,12 +15,13 @@
     "build": "node build.js",
     "clean": "rimraf dist",
     "copy:env": "cp .env dist/.env",
+    "copy:pkg": "cp package.json dist/package.json",
     "lint": "eslint . --ext .js,.ts",
     "test": "jest --runInBand --detectOpenHandles --colors --verbose",
     "test:ci": "npm run lint && npm run test",
     "test:watch": "jest --watch --verbose",
     "test:coverage": "jest --runInBand --no-cache --coverage --silent",
-    "deploy": "npm run build && npm run copy:env && ts-node src/config/deploy.ts"
+    "deploy": "npm run build && npm run copy:env && npm run copy:pkg && ts-node src/config/deploy.ts"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.46.0",
