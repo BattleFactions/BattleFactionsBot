@@ -11,7 +11,10 @@ export const linkEth = async (client: Client, imxClient: ImmutableXClient) => {
     if (!interaction.isCommand()) return;
 
     const { commandName } = interaction;
-    if (commandName === BattleFactions.CommandsEnum.BF_LINK_ETH) {
+    if (
+      commandName === BattleFactions.CommandsEnum.BF_LINK_ETH ||
+      commandName === BattleFactions.CommandsEnum.BF_VERIFY
+    ) {
       await executeLinkEth(client, interaction, imxClient);
     }
   });
@@ -27,14 +30,20 @@ const executeLinkEth = async (client: Client, interaction: Interaction, imxClien
 
   if (Web3.utils.isAddress(address)) {
     try {
-      const success = await linkEthService(client, interaction, imxClient, user, address);
+      const linkResult = await linkEthService(client, interaction, imxClient, user, address);
 
-      if (success) {
+      if (linkResult && linkResult.linked) {
         interaction['reply'](
-          ephemeralMessage(`User ${user.username} and address ${address} were linked successfully!`),
+          ephemeralMessage(
+            `User ${user.username} and address ${address} were linked successfully. ${linkResult.numberOfRolesApplied} role(s) have been applied!`,
+          ),
         );
       } else {
-        interaction['reply'](ephemeralMessage(`User ${user.username} and address ${address} are already linked.`));
+        interaction['reply'](
+          ephemeralMessage(
+            `User ${user.username} and address ${address} are already linked. ${linkResult.numberOfRolesApplied} role(s) have been applied!`,
+          ),
+        );
       }
     } catch (e) {
       console.log('Error:', e);

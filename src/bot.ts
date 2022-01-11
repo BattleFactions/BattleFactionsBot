@@ -13,17 +13,21 @@ const client = new Client({
 });
 
 client.on('ready', async () => {
-  // Configure IMX Client
-  const imxClient = await ImmutableXClient.build({ publicApiUrl: apiAddress });
+  try {
+    // Configure IMX Client
+    const imxClient = await ImmutableXClient.build({ publicApiUrl: apiAddress });
 
-  // Register Commands
-  registerCommands();
-  // Add command handlers actions here
-  await applyRoles(client, imxClient);
-  await linkEth(client, imxClient);
-  await generateListOfCurrentUsers(client);
-  await generateListOfHolders(client, imxClient);
-  console.log('Bot is online!');
+    // Register Commands
+    registerCommands();
+    // Add command handlers actions here
+    await applyRoles(client, imxClient);
+    await linkEth(client, imxClient);
+    await generateListOfCurrentUsers(client);
+    await generateListOfHolders(client, imxClient);
+    console.log('Bot is online!');
+  } catch (e) {
+    console.log('An error occurred:', e);
+  }
 });
 
 // Login to Discord with your client's token

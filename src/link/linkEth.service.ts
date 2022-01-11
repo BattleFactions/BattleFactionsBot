@@ -27,13 +27,18 @@ const updateUserLink = async (userEntity: BattleFactions.UserEntity, address: st
   return false;
 };
 
+type LinkResult = {
+  linked: boolean;
+  numberOfRolesApplied: number;
+}
+
 const linkEth = async (
   client: Client,
   interaction: Interaction,
   imxClient: ImmutableXClient,
   user: User,
   address: BattleFactions.Address,
-): Promise<boolean> => {
+): Promise<LinkResult> => {
   try {
     const userEntity = await getUser(user.id);
     let linked: boolean;
@@ -47,9 +52,8 @@ const linkEth = async (
     } else {
       linked = await createUserLink(user, address);
     }
-    //TODO Apply roles based on eth addresses
-    await applyRoles(client, interaction, imxClient, addresses);
-    return Promise.resolve(linked);
+    const numberOfRolesApplied = await applyRoles(client, interaction, imxClient, addresses);
+    return Promise.resolve({ linked, numberOfRolesApplied });
   } catch (error) {
     if (isAppError(error)) throw error;
     throw linkEthError;

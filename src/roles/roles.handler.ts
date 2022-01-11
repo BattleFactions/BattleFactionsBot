@@ -1,7 +1,8 @@
 import { Client, Interaction } from 'discord.js';
 import { ImmutableXClient } from '@imtbl/imx-sdk';
-import { getAddress } from '../utils/imxUtils';
+import { getAddress, isBot } from '../utils/imxUtils';
 import { applyRoles as applyRolesService } from './roles.service';
+import { ephemeralMessage } from 'app/utils/utils';
 const Web3 = require('web3');
 
 export const applyRoles = async (client: Client, imxClient: ImmutableXClient) => {
@@ -9,7 +10,7 @@ export const applyRoles = async (client: Client, imxClient: ImmutableXClient) =>
     if (!interaction.isCommand()) return;
 
     const { commandName } = interaction;
-    if (commandName === 'bf-verify') {
+    if (commandName === 'bf-verify-deprecated') {
       await execute(client, interaction, imxClient);
     }
   });
@@ -17,6 +18,11 @@ export const applyRoles = async (client: Client, imxClient: ImmutableXClient) =>
 
 const execute = async (client: Client, interaction: Interaction, imx: ImmutableXClient) => {
   const address = getAddress(interaction);
+
+  if (isBot(interaction)) {
+    await interaction['reply'](ephemeralMessage('Bots cannot be used with this command!'));
+  }
+
   if (Web3.utils.isAddress(address)) {
     try {
       const numberOfRolesApplied = await applyRolesService(client, interaction, imx, [address]);

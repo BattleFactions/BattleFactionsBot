@@ -47,6 +47,7 @@ declare namespace BattleFactions {
   type Address = string;
 
   const enum CommandsEnum {
+    BF_VERIFY = 'bf-verify',
     BF_LINK_ETH = 'bf-link-eth',
     BF_GENERATE_HOLDERS_LIST = 'bf-generate-holders-list',
     BF_GENERATE_USERS_LIST = 'bf-generate-users-list',

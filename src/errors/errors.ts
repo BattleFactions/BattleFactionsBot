@@ -3,6 +3,7 @@ enum ErrorTypesEnum {
   USER_UPDATE_ERROR = 'UserUpdateError',
   USER_READ_ERROR = 'UserReadError',
   LINK_ETH_ERROR = 'LinkEthError',
+  VERIFY_USER_ERROR = 'VerifyUserError',
 }
 
 export const userCreateError: AppError = {
@@ -23,6 +24,11 @@ export const userReadError: AppError = {
 export const linkEthError: AppError = {
   type: ErrorTypesEnum.LINK_ETH_ERROR,
   message: 'Could not link the user to the wallet',
+};
+
+export const verifyUserError: AppError = {
+  type: ErrorTypesEnum.VERIFY_USER_ERROR,
+  message: 'Could not verify the user for this wallet',
 };
 
 export const isAppError = (error: Error | AppError): boolean => {

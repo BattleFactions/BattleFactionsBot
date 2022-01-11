@@ -8,6 +8,7 @@ import {
   holdersRoleId,
 } from '../utils/utils';
 import { Asset, getAssetsPerAddress, getListedItemsPerAddress, ListedItems } from '../utils/imxUtils';
+import { isAppError, verifyUserError } from '../errors/errors';
 
 export const applyRole = async (client: Client, interaction: Interaction, roleId: string) => {
   const guild = client.guilds.cache.get(guildId);
@@ -83,21 +84,25 @@ export const applyRoles = async (
   imx: ImmutableXClient,
   addresses: string[],
 ): Promise<number> => {
-  // Rules
-  const assets: Asset[] = [];
-  const listedItems: ListedItems[] = [];
-  let numberOfRolesApplied = 0;
+  try {
+    const assets: Asset[] = [];
+    const listedItems: ListedItems[] = [];
+    let numberOfRolesApplied = 0;
 
-  for (const address of addresses) {
-    const foundAssets = await getAssetsPerAddress(imx, address);
-    assets.push(...foundAssets);
-    const foundItems = await getListedItemsPerAddress(imx, address);
-    listedItems.push(...foundItems);
+    for (const address of addresses) {
+      const foundAssets = await getAssetsPerAddress(imx, address);
+      assets.push(...foundAssets);
+      const foundItems = await getListedItemsPerAddress(imx, address);
+      listedItems.push(...foundItems);
+    }
+
+    numberOfRolesApplied += await applyHoldersRole(assets, client, interaction);
+    numberOfRolesApplied += await applyFactionDolphinRole(assets, client, interaction);
+    numberOfRolesApplied += await applyFactionWhaleClubRole(assets, client, interaction);
+    numberOfRolesApplied += await applyFactionGeneralsRole(assets, client, interaction, imx, listedItems);
+    return numberOfRolesApplied;
+  } catch (error) {
+    if (isAppError(error)) throw error;
+    throw verifyUserError;
   }
-
-  numberOfRolesApplied += await applyHoldersRole(assets, client, interaction);
-  numberOfRolesApplied += await applyFactionDolphinRole(assets, client, interaction);
-  numberOfRolesApplied += await applyFactionWhaleClubRole(assets, client, interaction);
-  numberOfRolesApplied += await applyFactionGeneralsRole(assets, client, interaction, imx, listedItems);
-  return numberOfRolesApplied;
 };
