@@ -25,7 +25,7 @@ const executeLinkEth = async (client: Client, interaction: Interaction, imxClien
   const address = getAddress(interaction);
 
   if (isBot(interaction)) {
-    await interaction['reply'](ephemeralMessage('Bots cannot be used to link a wallet!'));
+    await interaction['reply'](ephemeralMessage('Bots cannot be used to link/verify a wallet!'));
   }
 
   if (Web3.utils.isAddress(address)) {

@@ -1,36 +1,22 @@
 import { Client, Interaction, User } from 'discord.js';
 import { ImmutableXClient } from '@imtbl/imx-sdk';
-import { isAppError, linkEthError } from '../errors/errors';
-import { createUser, getUser, updateUser } from '../user/user.service';
-import { hasWallet } from '../utils/utils';
+import { isAppError, linkEthError, walletLinkedError } from '../errors/errors';
+import { createUser, readUser } from '../user/user.service';
 import { userMapper } from '../user/user.mapper';
 import { applyRoles } from '../roles/roles.service';
+import { createWallet, listWallets, readWallet } from "../wallets/wallet.service";
+import { buildWalletEntity } from "../wallets/wallet.mapper";
 
-const createUserLink = async (user: User, address: string) => {
-  const userEntity = userMapper(user, {
-    address,
-    network: BattleFactions.NetworkTypesEnum.ETH,
-  });
+const createUserToBeLinked = async (user: User): Promise<BattleFactions.UserEntity> => {
+  const userEntity = userMapper(user);
   await createUser(userEntity);
-  return true;
-};
-
-const updateUserLink = async (userEntity: BattleFactions.UserEntity, address: string): Promise<boolean> => {
-  if (!hasWallet(userEntity.Wallets, address)) {
-    userEntity.Wallets.push({
-      address,
-      network: BattleFactions.NetworkTypesEnum.ETH,
-    });
-    await updateUser(userEntity);
-    return true;
-  }
-  return false;
+  return readUser(userEntity.Id);
 };
 
 type LinkResult = {
   linked: boolean;
   numberOfRolesApplied: number;
-}
+};
 
 const linkEth = async (
   client: Client,
@@ -40,20 +26,24 @@ const linkEth = async (
   address: BattleFactions.Address,
 ): Promise<LinkResult> => {
   try {
-    const userEntity = await getUser(user.id);
-    let linked: boolean;
-    const addresses = [address];
-    if (userEntity) {
-      const userAddresses = userEntity.Wallets.map((wallet) => {
-        return wallet.address;
-      });
-      addresses.push(...userAddresses);
-      linked = await updateUserLink(userEntity, address);
-    } else {
-      linked = await createUserLink(user, address);
+    // Get wallet and create it if it doesn't exist
+    let walletEntity = await readWallet(address);
+    if (!walletEntity) {
+      walletEntity = await createWallet(buildWalletEntity(address, user.id));
     }
+    if (walletEntity.UserId !== user.id) throw walletLinkedError;
+
+    // Get user and create it if it doesn't exist
+    let userEntity = await readUser(user.id);
+    if (!userEntity) {
+      userEntity = await createUserToBeLinked(user);
+    }
+
+    const wallets = await listWallets(userEntity.Id);
+    const addresses = wallets.map((wallet) => wallet.Address);
+
     const numberOfRolesApplied = await applyRoles(client, interaction, imxClient, addresses);
-    return Promise.resolve({ linked, numberOfRolesApplied });
+    return Promise.resolve({ linked: true, numberOfRolesApplied });
   } catch (error) {
     if (isAppError(error)) throw error;
     throw linkEthError;

@@ -58,16 +58,12 @@ declare namespace BattleFactions {
   }
   type NetworkTypes = keyof typeof NetworkTypesEnum;
 
-  type Wallet = {
-    address: Address;
-    network?: NetworkTypes;
-  };
-
   const enum TypesEnum {
     User = 'User',
+    Wallet = 'Wallet',
   }
   type EntityTypes = keyof typeof TypesEnum;
-  type DtoTypes = keyof typeof TypesEnum;
+  type ModelTypes = keyof typeof TypesEnum;
 
   interface BaseEntity<EntityType extends EntityTypes, PKType, SKType> {
     PK: PKType;
@@ -78,14 +74,15 @@ declare namespace BattleFactions {
     UpdatedAt?: DateAndTimeInISOString;
   }
 
-  interface BaseDto<DtoType extends DtoTypes> {
+  interface BaseModel<ModelType extends ModelTypes> {
     Id: Id;
+    CreatedAt: DateAndTimeInISOString;
+    UpdatedAt?: DateAndTimeInISOString;
   }
 
   interface UserEntity extends BaseEntity<TypesEnum.User, 'USER', `USER_ID#${Id}`> {
     Username: Username;
     Discriminator: Discriminator;
-    Wallets: Wallet[];
     Avatar?: Avatar;
     Name?: Name;
     Email?: Email;
@@ -94,19 +91,32 @@ declare namespace BattleFactions {
     DateOfBirth?: DateInISOString;
   }
 
-  type Entity = UserEntity;
-
-  interface UserDto extends BaseDto<TypesEnum.User> {
-    Username: Username;
-    Discriminator: Discriminator;
-    Avatar?: Avatar;
-    Wallets?: Wallet[];
-    Name?: Name;
-    Email?: Email;
-    Phone?: Phone;
-    Country?: Country;
-    DateOfBirth?: DateInISOString;
+  interface WalletEntity extends BaseEntity<TypesEnum.Wallet, `WALLET`, `WALLET_ID#${Id}`> {
+    GSI1PK: 'WALLET';
+    GSI1SK: `USER_ID#${Id}#WALLET_ID#${Id}`;
+    UserId: Id;
+    Address: Address;
+    Network: NetworkTypes;
   }
 
-  type Dto = UserDto;
+  type Entity = UserEntity | WalletEntity;
+
+  interface WalletModel extends BaseModel<TypesEnum.Wallet> {
+    UserId: Id;
+    Address: Address;
+    Network: NetworkTypes;
+  }
+
+  // interface UserDto extends BaseDto<TypesEnum.User> {
+  //   Username: Username;
+  //   Discriminator: Discriminator;
+  //   Avatar?: Avatar;
+  //   Name?: Name;
+  //   Email?: Email;
+  //   Phone?: Phone;
+  //   Country?: Country;
+  //   DateOfBirth?: DateInISOString;
+  // }
+
+  // type Dto = UserDto | WalletDto;
 }

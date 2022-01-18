@@ -1,5 +1,6 @@
 import {
   BatchWriteItemCommand,
+  DeleteItemCommand,
   DynamoDBClient,
   GetItemCommand,
   PutItemCommand,
@@ -34,12 +35,20 @@ export const sendPutItem = async (command: PutItemCommand): Promise<boolean> => 
   return capacityUnits ? Promise.resolve(capacityUnits > 0) : Promise.reject(false);
 };
 
-export const sendUpdateItem = async (command: UpdateItemCommand) => {
+export const sendUpdateItem = async (command: UpdateItemCommand): Promise<boolean> => {
   const commandOutput = await client.send(command);
 
   const capacityUnits = commandOutput.ConsumedCapacity?.CapacityUnits;
 
-  return capacityUnits ? capacityUnits > 0 : false;
+  return capacityUnits ? Promise.resolve(capacityUnits > 0) : Promise.reject(false);
+};
+
+export const sendDeleteItem = async (command: DeleteItemCommand): Promise<boolean> => {
+  const commandOutput = await client.send(command);
+
+  const capacityUnits = commandOutput.ConsumedCapacity?.CapacityUnits;
+
+  return capacityUnits ? Promise.resolve(capacityUnits > 0) : Promise.reject(false);
 };
 
 export const sendBatchWriteItem = async (command: BatchWriteItemCommand) => {

@@ -8,10 +8,8 @@ export const getListOfCurrentUsers = async (client: Client): Promise<User[]> => 
   const users = members.map((member) => {
     return member.user;
   });
-  console.log('users length:', users.length);
 
-  const result = users.filter((user) => !user.bot);
-  return result;
+  return users.filter((user) => !user.bot);
 };
 
 export const hasModPermissions = async (member: GuildMember | null) => {

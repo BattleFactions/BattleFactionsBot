@@ -28,6 +28,6 @@ export const message = (message: string, files?: MessageAttachment[]) => ({
   files,
 });
 
-export const hasWallet = (wallets: BattleFactions.Wallet[], address: BattleFactions.Address) => {
-  return wallets.findIndex((wallet) => wallet.address === address) != -1;
+export const hasWallet = (wallets: BattleFactions.WalletEntity[], address: BattleFactions.Address) => {
+  return wallets.findIndex((wallet) => wallet.Address === address) != -1;
 };

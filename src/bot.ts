@@ -4,7 +4,7 @@ import { registerCommands } from './commands/commands';
 import { apiAddress, token } from './utils/utils';
 import { generateListOfHolders } from './holders/holders.handler';
 import { linkEth } from './link/linkEth.handler';
-import { generateListOfCurrentUsers } from './user/users.handler';
+import { generateListOfCurrentUsers } from './user/user.handler';
 const { Client, Intents } = require('discord.js');
 
 // Create a new client instance

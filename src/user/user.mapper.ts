@@ -4,9 +4,8 @@ import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(utc);
 
-export const userMapper = (user: User, wallet: BattleFactions.Wallet): BattleFactions.UserEntity => {
+export const userMapper = (user: User): BattleFactions.UserEntity => {
   return {
-    Wallets: [wallet],
     Entity: BattleFactions.TypesEnum.User,
     PK: 'USER',
     SK: `USER_ID#${user.id}`,
