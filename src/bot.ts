@@ -5,7 +5,7 @@ import { apiAddress, token } from './utils/utils';
 import { generateListOfHolders } from './holders/holders.handler';
 import { linkEth } from './link/linkEth.handler';
 import { generateListOfCurrentUsers } from './user/user.handler';
-import { getWalletsStatuses } from 'app/wallets/wallet.handler';
+import { getWalletsStatuses } from './wallets/wallet.handler';
 const { Client, Intents } = require('discord.js');
 
 // Create a new client instance
