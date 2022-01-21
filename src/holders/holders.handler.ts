@@ -1,13 +1,9 @@
 import { Client, Message, MessageAttachment } from 'discord.js';
-import { getListOfAssetsAddresses } from '../utils/imxUtils';
 import { message as messageResponse, prefix } from '../utils/utils';
 import { hasModPermissions } from '../utils/discordUtils';
+import { getListOfHolders } from './holders.service';
 
 let imx;
-
-type Asset = {
-  address: string;
-};
 
 export const generateListOfHolders = async (client: Client, imxClient) => {
   imx = imxClient;
@@ -28,20 +24,7 @@ export const generateListOfHolders = async (client: Client, imxClient) => {
 
 const execute = async (client: Client, message: Message) => {
   try {
-    const listOfAssetsAddresses = await getListOfAssetsAddresses(imx);
-
-    const listOfAddresses = listOfAssetsAddresses.reduce((address, asset: Asset) => {
-      if (!Object.prototype.hasOwnProperty.call(address, asset.address)) {
-        address[asset.address] = 0;
-      }
-      address[asset.address]++;
-      return address;
-    }, {});
-
-    const listOfHolders = Object.keys(listOfAddresses).map((address) => {
-      return { address: address, count: listOfAddresses[`${address}`] };
-    });
-
+    const listOfHolders = await getListOfHolders(imx);
     const attachment = new MessageAttachment(Buffer.from(JSON.stringify(listOfHolders)), 'listOfHolders.json');
     await message.reply(messageResponse('List of holders successfully generated.', [attachment]));
   } catch (e) {

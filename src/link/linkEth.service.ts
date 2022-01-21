@@ -4,8 +4,8 @@ import { isAppError, linkEthError, walletLinkedError } from '../errors/errors';
 import { createUser, readUser } from '../user/user.service';
 import { userMapper } from '../user/user.mapper';
 import { applyRoles } from '../roles/roles.service';
-import { createWallet, listWallets, readWallet } from "../wallets/wallet.service";
-import { buildWalletEntity } from "../wallets/wallet.mapper";
+import { createWallet, listWallets, readWallet } from '../wallets/wallet.service';
+import { buildWalletEntity } from '../wallets/wallet.mapper';
 
 const createUserToBeLinked = async (user: User): Promise<BattleFactions.UserEntity> => {
   const userEntity = userMapper(user);

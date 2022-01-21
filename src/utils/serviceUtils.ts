@@ -1,11 +1,11 @@
-import { sendDeleteItem, sendGetItem, sendPutItem, sendQuery, sendUpdateItem } from "../aws/dynamodb/dynamoDBClient";
+import { sendDeleteItem, sendGetItem, sendPutItem, sendQuery, sendUpdateItem } from '../aws/dynamodb/dynamoDBClient';
 import {
   GetItemCommand,
   PutItemCommand,
   UpdateItemCommand,
   DeleteItemCommand,
-  QueryCommand
-} from "@aws-sdk/client-dynamodb";
+  QueryCommand,
+} from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
 
 const TableName = process.env.BF_TABLE;
@@ -35,6 +35,32 @@ const getExpressionAttributeValues = (fieldNames: string[], entity: BattleFactio
   return marshall(expressionAttributeValues);
 };
 
+const listIds = async <EntityType extends unknown>(
+  PK: string,
+  conditionExpression: string,
+  listError: AppError,
+  indexName: string = '',
+) => {
+  try {
+    const PKKey = `:${indexName}PK`;
+    const command = {
+      TableName,
+      KeyConditionExpression: conditionExpression,
+      ExpressionAttributeValues: marshall({
+        [PKKey]: PK,
+      }),
+      AttributesToGet: ['Id'],
+    };
+    if (indexName !== '') command['IndexName'] = indexName;
+    return sendQuery<EntityType>(new QueryCommand(command));
+  } catch (error) {
+    if (error.name === 'ConditionalCheckFailedException') {
+      throw listError;
+    }
+    throw error;
+  }
+};
+
 const listEntities = async <EntityType extends unknown>(
   PK: string,
   SK: string,
@@ -53,17 +79,15 @@ const listEntities = async <EntityType extends unknown>(
         [SKKey]: SK,
       }),
     };
-    if(indexName !== '') command['IndexName'] = indexName;
-    return sendQuery<EntityType>(
-      new QueryCommand(command),
-    );
+    if (indexName !== '') command['IndexName'] = indexName;
+    return sendQuery<EntityType>(new QueryCommand(command));
   } catch (error) {
     if (error.name === 'ConditionalCheckFailedException') {
       throw listError;
     }
     throw error;
   }
-}
+};
 
 const createEntity = async <EntityType extends unknown>(
   entity: EntityType,
@@ -156,4 +180,4 @@ const deleteEntity = async (PK: string, SK: string, deleteError: AppError): Prom
   }
 };
 
-export { listEntities, createEntity, readEntity, updateEntity, deleteEntity };
+export { listIds, listEntities, createEntity, readEntity, updateEntity, deleteEntity };

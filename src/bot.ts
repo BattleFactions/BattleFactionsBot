@@ -5,6 +5,7 @@ import { apiAddress, token } from './utils/utils';
 import { generateListOfHolders } from './holders/holders.handler';
 import { linkEth } from './link/linkEth.handler';
 import { generateListOfCurrentUsers } from './user/user.handler';
+import { getWalletsStatuses } from 'app/wallets/wallet.handler';
 const { Client, Intents } = require('discord.js');
 
 // Create a new client instance
@@ -24,6 +25,7 @@ client.on('ready', async () => {
     await linkEth(client, imxClient);
     await generateListOfCurrentUsers(client);
     await generateListOfHolders(client, imxClient);
+    await getWalletsStatuses(client, imxClient);
     console.log('Bot is online!');
   } catch (e) {
     console.log('An error occurred:', e);

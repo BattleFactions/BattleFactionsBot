@@ -1,9 +1,14 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { userCreateError, userDeleteError, userReadError, userUpdateError } from '../errors/errors';
-import { createEntity, deleteEntity, readEntity, updateEntity } from '../utils/serviceUtils';
+import { listUsersIdsError, userCreateError, userDeleteError, userReadError, userUpdateError } from '../errors/errors';
+import { createEntity, deleteEntity, listIds, readEntity, updateEntity } from '../utils/serviceUtils';
 
 dayjs.extend(utc);
+
+const listUsersIds = async () => {
+  const keyConditionExpression = 'PK = :PK';
+  return listIds('USER', keyConditionExpression, listUsersIdsError);
+};
 
 const createUser = async (user: BattleFactions.UserEntity) => {
   return createEntity(user, userCreateError);
@@ -28,4 +33,4 @@ const deleteUser = async (userId: BattleFactions.Id) => {
   return deleteEntity(PK, SK, userDeleteError);
 };
 
-export { createUser, readUser, updateUser, deleteUser };
+export { listUsersIds, createUser, readUser, updateUser, deleteUser };

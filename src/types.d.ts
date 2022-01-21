@@ -51,6 +51,7 @@ declare namespace BattleFactions {
     BF_LINK_ETH = 'bf-link-eth',
     BF_GENERATE_HOLDERS_LIST = 'bf-generate-holders-list',
     BF_GENERATE_USERS_LIST = 'bf-generate-users-list',
+    BF_GENERATE_WALLETS_STATUSES = 'bf-generate-wallets-statuses',
   }
 
   const enum NetworkTypesEnum {
@@ -106,17 +107,4 @@ declare namespace BattleFactions {
     Address: Address;
     Network: NetworkTypes;
   }
-
-  // interface UserDto extends BaseDto<TypesEnum.User> {
-  //   Username: Username;
-  //   Discriminator: Discriminator;
-  //   Avatar?: Avatar;
-  //   Name?: Name;
-  //   Email?: Email;
-  //   Phone?: Phone;
-  //   Country?: Country;
-  //   DateOfBirth?: DateInISOString;
-  // }
-
-  // type Dto = UserDto | WalletDto;
 }

@@ -5,6 +5,7 @@ enum ErrorTypesEnum {
   WALLET_UPDATE_ERROR = 'WalletUpdateError',
   WALLET_DELETE_ERROR = 'WalletDeleteError',
   WALLET_LINKED_ERROR = 'WalletLinkedError',
+  LIST_USER_ID_ERROR = 'ListUserIdError',
   USER_CREATE_ERROR = 'UserCreateError',
   USER_READ_ERROR = 'UserReadError',
   USER_UPDATE_ERROR = 'UserUpdateError',
@@ -41,6 +42,11 @@ export const walletDeleteError: AppError = {
 export const walletLinkedError: AppError = {
   type: ErrorTypesEnum.WALLET_LINKED_ERROR,
   message: 'This wallet is already linked to another user. Any questions, talk to a moderator.',
+};
+
+export const listUsersIdsError: AppError = {
+  type: ErrorTypesEnum.LIST_USER_ID_ERROR,
+  message: 'Could not list the users ids',
 };
 
 export const userCreateError: AppError = {
