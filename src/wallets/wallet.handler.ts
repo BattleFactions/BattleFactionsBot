@@ -1,8 +1,8 @@
 import { Client, Message, MessageAttachment } from 'discord.js';
 import { message as messageResponse, prefix } from '../utils/utils';
-import { hasModPermissions } from 'app/utils/discordUtils';
-import { getListOfHolders } from 'app/holders/holders.service';
-import { getListedItemsPerAddress } from 'app/utils/imxUtils';
+import { hasModPermissions } from '../utils/discordUtils';
+import { getListOfHolders } from '../holders/holders.service';
+import { getListedItemsPerAddress } from '../utils/imxUtils';
 
 let imx;
 
