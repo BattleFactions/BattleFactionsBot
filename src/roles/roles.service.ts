@@ -52,19 +52,8 @@ export const applyFactionGeneralsRole = async (
   interaction: Interaction,
   listedItems: ListedItems[],
 ): Promise<number> => {
-  // @Faction Generals -> At least 1 NFT unlisted and all the other NFTs must be > 0.1 eth
-  // Rule => 1-2 = 1 unlisted
-  if (assets.length <= 2 && assets.length - listedItems.length >= 1) {
-    await applyRole(interaction.user.id, factionGeneralsRoleId, client.guilds.cache.get(guildId));
-    return 1;
-  }
-  // Rule => 3-5 = 2 unlisted
-  if (assets.length <= 5 && assets.length - listedItems.length >= 2) {
-    await applyRole(interaction.user.id, factionGeneralsRoleId, client.guilds.cache.get(guildId));
-    return 1;
-  }
-  // Rule => 6+ = 3 unlisted
-  if (assets.length >= 6 && assets.length - listedItems.length >= 3) {
+  // @Faction Generals -> All NFTs unlisted
+  if (assets.length >= 1 && listedItems.length <= 0) {
     await applyRole(interaction.user.id, factionGeneralsRoleId, client.guilds.cache.get(guildId));
     return 1;
   }
