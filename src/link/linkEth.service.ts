@@ -42,7 +42,7 @@ const linkEth = async (
     const wallets = await listWallets(userEntity.Id);
     const addresses = wallets.map((wallet) => wallet.Address);
 
-    const numberOfRolesApplied = await applyRoles(client, interaction, imxClient, addresses);
+    const numberOfRolesApplied = await applyRoles(client, interaction.user.id, imxClient, addresses);
     return Promise.resolve({ linked: true, numberOfRolesApplied });
   } catch (error) {
     if (isAppError(error)) throw error;

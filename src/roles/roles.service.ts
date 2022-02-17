@@ -1,4 +1,4 @@
-import { Client, Interaction } from 'discord.js';
+import { Client } from 'discord.js';
 import { ImmutableXClient } from '@imtbl/imx-sdk';
 import {
   factionDolphinRoleId,
@@ -11,10 +11,10 @@ import { Asset, getAssetsPerAddress, getListedItemsPerAddress, ListedItems } fro
 import { isAppError, verifyUserError } from '../errors/errors';
 import { applyRole } from '../utils/discordUtils';
 
-export const applyHoldersRole = async (assets: Asset[], client: Client, interaction: Interaction): Promise<number> => {
+export const applyHoldersRole = async (assets: Asset[], client: Client, userId: BattleFactions.Id): Promise<number> => {
   // @HOLDERS -> 1+ NFT
   if (assets.length > 1) {
-    await applyRole(interaction.user.id, holdersRoleId, client.guilds.cache.get(guildId));
+    await applyRole(userId, holdersRoleId, client.guilds.cache.get(guildId));
     return 1;
   }
   return 0;
@@ -23,11 +23,11 @@ export const applyHoldersRole = async (assets: Asset[], client: Client, interact
 export const applyFactionDolphinRole = async (
   assets: Asset[],
   client: Client,
-  interaction: Interaction,
+  userId: BattleFactions.Id,
 ): Promise<number> => {
   // @Faction Dolphin -> 5+ NFTs
   if (assets.length > 5) {
-    await applyRole(interaction.user.id, factionDolphinRoleId, client.guilds.cache.get(guildId));
+    await applyRole(userId, factionDolphinRoleId, client.guilds.cache.get(guildId));
     return 1;
   }
   return 0;
@@ -36,11 +36,11 @@ export const applyFactionDolphinRole = async (
 export const applyFactionWhaleClubRole = async (
   assets: Asset[],
   client: Client,
-  interaction: Interaction,
+  userId: BattleFactions.Id,
 ): Promise<number> => {
   // @Faction Whale Club -> 10+ NFTs
   if (assets.length > 10) {
-    await applyRole(interaction.user.id, factionWhaleClubRoleId, client.guilds.cache.get(guildId));
+    await applyRole(userId, factionWhaleClubRoleId, client.guilds.cache.get(guildId));
     return 1;
   }
   return 0;
@@ -49,12 +49,12 @@ export const applyFactionWhaleClubRole = async (
 export const applyFactionGeneralsRole = async (
   assets: Asset[],
   client: Client,
-  interaction: Interaction,
+  userId: BattleFactions.Id,
   listedItems: ListedItems[],
 ): Promise<number> => {
   // @Faction Generals -> All NFTs unlisted
   if (assets.length >= 1 && listedItems.length <= 0) {
-    await applyRole(interaction.user.id, factionGeneralsRoleId, client.guilds.cache.get(guildId));
+    await applyRole(userId, factionGeneralsRoleId, client.guilds.cache.get(guildId));
     return 1;
   }
   return 0;
@@ -62,7 +62,7 @@ export const applyFactionGeneralsRole = async (
 
 export const applyRoles = async (
   client: Client,
-  interaction: Interaction,
+  userId: BattleFactions.Id,
   imx: ImmutableXClient,
   addresses: string[],
 ): Promise<number> => {
@@ -78,10 +78,10 @@ export const applyRoles = async (
       listedItems.push(...foundItems);
     }
 
-    numberOfRolesApplied += await applyHoldersRole(assets, client, interaction);
-    numberOfRolesApplied += await applyFactionDolphinRole(assets, client, interaction);
-    numberOfRolesApplied += await applyFactionWhaleClubRole(assets, client, interaction);
-    numberOfRolesApplied += await applyFactionGeneralsRole(assets, client, interaction, listedItems);
+    numberOfRolesApplied += await applyHoldersRole(assets, client, userId);
+    numberOfRolesApplied += await applyFactionDolphinRole(assets, client, userId);
+    numberOfRolesApplied += await applyFactionWhaleClubRole(assets, client, userId);
+    numberOfRolesApplied += await applyFactionGeneralsRole(assets, client, userId, listedItems);
     return numberOfRolesApplied;
   } catch (error) {
     if (isAppError(error)) throw error;

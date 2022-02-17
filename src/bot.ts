@@ -1,7 +1,9 @@
 import { ImmutableXClient } from '@imtbl/imx-sdk';
-import { applyRoles } from './roles/roles.handler';
-import { registerCommands } from './commands/commands';
+import { Agenda } from 'agenda';
 import { apiAddress, token } from './utils/utils';
+import { registerCommands } from './commands/commands';
+import { applyRoles } from './roles/roles.handler';
+import { verifyRoles } from './roles/verify.handler';
 import { generateListOfHolders } from './holders/holders.handler';
 import { linkEth } from './link/linkEth.handler';
 import { generateListOfCurrentUsers } from './user/user.handler';
@@ -18,6 +20,9 @@ client.on('ready', async () => {
     // Configure IMX Client
     const imxClient = await ImmutableXClient.build({ publicApiUrl: apiAddress });
 
+    // Instance for cron jobs
+    const agenda = new Agenda();
+
     // Register Commands
     registerCommands();
     // Add command handlers actions here
@@ -26,6 +31,8 @@ client.on('ready', async () => {
     await generateListOfCurrentUsers(client);
     await generateListOfHolders(client, imxClient);
     await getWalletsStatuses(client, imxClient);
+    await verifyRoles(client, imxClient, agenda);
+
     console.log('Bot is online!');
   } catch (e) {
     console.log('An error occurred:', e);
